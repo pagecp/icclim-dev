@@ -1318,6 +1318,9 @@ def _batch8_rain_oracle(source: xr.Dataset, case: Batch8RainCase) -> np.ndarray:
     # The ATBD defines RRwn as the percentile "of precipitation at wet days in
     # the 1961-1990 period"; unlike temperature percentiles, no five-day window
     # is used. Wet days are RR >= 1.0 mm and exceedance is strictly RR > RRwn.
+    # For RpTOT, it defines the denominator explicitly: "Let RRj be the sum of
+    # daily precipitation amount for period j." This oracle therefore sums all
+    # finite precipitation, whereas icclim currently sums wet-day precipitation.
     years = source.time.dt.year.values
     values = source.pr.values * 86400
     threshold = _batch8_period_percentile(values, years, case.percentile)
